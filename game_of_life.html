@@ -1,0 +1,103 @@
+<html>
+	<title></title>
+	<body id="bdy">
+		<script type="text/javascript">
+			var cellTracker = new Array();
+			var table = document.createElement("table");
+			var cellIndex = 0;
+			var gridWidth = 100;
+			var gridHeight = 100;
+			for(var i = 0; i < gridWidth; i++){
+				var row = document.createElement("tr");
+				for(var j =0; j < gridHeight; j++){
+					var cell = document.createElement("td");
+					row.appendChild(cell);
+					/*if(i == 2 && j > 0 && j < 4){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}*/
+					/*if(j == 1 && i == 3){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(j == 2 && (i == 2 || i == 3)){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(j == 3 && (i == 2 || i == 3)){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(j == 4 && i == 2){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}*/
+					if(j >= 1 && j <= 3 && i >= 1 && i <= 3){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}
+					/*if(i == 3 && j == 1){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(i == 1 && j == 2){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(i == 3 && j == 2){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(i == 2 && j == 3){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}else if(i == 3 && j == 3){
+						cellTracker[cellIndex++] = {item:cell, x:i, y:j};
+						cell.setAttribute("bgcolor", "#000000");
+					}*/
+				}
+				table.appendChild(row);
+			}
+			table.setAttribute("border", "1");
+			table.setAttribute("width", "100%");
+			table.setAttribute("height", "100%");
+			document.getElementById("bdy").appendChild(table);
+			var cellsArr = new Array();
+			setInterval(startGame,100);
+			function startGame(){
+				var updateArray = new Array();
+				var arrIndex = 0;
+				for(var j = 0; j < cellTracker.length; j++){
+					cellsArr[j] = cellTracker[j].item;
+				}
+				for(var i = 0; i < gridWidth; i++){
+					for(var j =0; j < gridHeight; j++){
+						var neighborCount = getLiveNeighbors({item:table.rows[i].cells[j], x:i, y:j});
+						if(neighborCount == 3){
+							updateArray[arrIndex++] = {item:table.rows[i].cells[j], x:i, y:j};
+							table.rows[i].cells[j].setAttribute("bgcolor","#000000");
+						}else if(neighborCount == 2 && cellsArr.indexOf(table.rows[i].cells[j]) != -1){
+							updateArray[arrIndex++] = {item:table.rows[i].cells[j], x:i, y:j};
+							table.rows[i].cells[j].setAttribute("bgcolor","#000000");
+						}else{
+							table.rows[i].cells[j].setAttribute("bgcolor", "#ffffff");
+						}
+					}
+				}
+				cellTracker = updateArray;
+			}
+			function getLiveNeighbors(cell){
+				var liveNeighbors = 0;
+				var xPos = cell.x;
+				var yPos = cell.y;
+				for(var i = -1; i < 2; i++){
+					for(var j = -1; j < 2; j++){
+						if(((table.rows.length - 1) >= (xPos + i)) &&
+							((xPos + i) >= 0) && 
+							((table.rows.length - 1) >= (yPos + j)) &&
+							((yPos + j) >= 0) && 
+							cellsArr.indexOf(table.rows[xPos + i].cells[yPos + j]) != -1 &&
+							table.rows[xPos + i].cells[yPos + j] != cell.item){
+							liveNeighbors++;
+						}
+					}
+				}
+				return liveNeighbors;
+			}
+		</script>
+	</body>
+</html>
